@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AppService {
+    constructor(private readonly configService: ConfigService) {}
     getHello(): string {
-        return 'Hello World!';
+        const env = this.configService.get<string>('env');
+        return `Hello World! 1231 Port: ${env}`;
     }
 }

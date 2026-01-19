@@ -7,6 +7,9 @@
     "license": "UNLICENSED",
     "scripts": {
         "build": "nest build",
+        "build:dev": "node scripts/build-env.js dev && nest build",
+        "build:beta": "node scripts/build-env.js beta && nest build",
+        "build:prod": "node scripts/build-env.js prod && nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "nest start --watch",
@@ -21,6 +24,7 @@
     },
     "dependencies": {
         "@nestjs/common": "^11.0.1",
+        "@nestjs/config": "^4.0.2",
         "@nestjs/core": "^11.0.1",
         "@nestjs/platform-express": "^11.0.1",
         "reflect-metadata": "^0.2.2",
