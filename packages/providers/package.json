@@ -1,0 +1,21 @@
+{
+    "name": "@agent/providers",
+    "version": "0.0.1",
+    "private": true,
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        }
+    },
+    "files": [
+        "src"
+    ],
+    "dependencies": {
+        "@agent/core": "workspace:*",
+        "@agent/utils": "workspace:*"
+    }
+}
