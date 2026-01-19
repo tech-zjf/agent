@@ -5,7 +5,6 @@
  * 用法: node scripts/build-env.js <env>
  * env: dev | beta | prod
  */
-
 const fs = require('fs');
 const path = require('path');
 
