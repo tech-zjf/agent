@@ -21,8 +21,13 @@
         ],
         "paths": {
             "@/*": ["./*"],
-            "@agent/sdk": ["../../packages/sdk/src"],
-            "@agent/types": ["../../packages/types/src"]
+            "@agent/core": ["../../packages/core/src"],
+            "@agent/providers": ["../../packages/providers/src"],
+            "@agent/workflows": ["../../packages/workflows/src"],
+            "@agent/types": ["../../packages/types/src"],
+            "@agent/config": ["../../packages/config/src"],
+            "@agent/utils": ["../../packages/utils/src"],
+            "@agent/sdk": ["../../packages/sdk/src"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts"],
