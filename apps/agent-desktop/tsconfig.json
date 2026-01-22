@@ -13,21 +13,14 @@
         "isolatedModules": true,
         "jsx": "react-jsx",
         "incremental": true,
-        "baseUrl": ".",
+        "baseUrl": "../..",
         "plugins": [
             {
                 "name": "next"
             }
         ],
         "paths": {
-            "@/*": ["./*"],
-            "@agent/core": ["../../packages/core/src"],
-            "@agent/providers": ["../../packages/providers/src"],
-            "@agent/workflows": ["../../packages/workflows/src"],
-            "@agent/types": ["../../packages/types/src"],
-            "@agent/config": ["../../packages/config/src"],
-            "@agent/utils": ["../../packages/utils/src"],
-            "@agent/sdk": ["../../packages/sdk/src"]
+            "@/*": ["apps/agent-desktop/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts"],
