@@ -1,4 +1,4 @@
-import { environment } from './environment';
+export * from './environment';
 
 export interface Environment {
     production: boolean;
@@ -9,14 +9,3 @@ export interface Environment {
         port: number;
     };
 }
-
-// ConfigFactory 函数：用于 ConfigModule.load
-export const config = () => ({
-    ...environment,
-});
-
-// 类型断言（用于直接使用）
-export const env = environment;
-
-// 导出环境配置
-export { environment };

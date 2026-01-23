@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { PromiseTools } from '@agent/utils';
 
 export default function Home() {
     return (
