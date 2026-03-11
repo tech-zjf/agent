@@ -6,8 +6,8 @@ export class AppService {
     constructor(private readonly configService: ConfigService) {}
 
     getHealth() {
-        const env = this.configService.get<string>('env') ?? 'dev';
-        const port = this.configService.get<number>('port') ?? 3006;
+        const env = this.configService.get<'dev' | 'beta' | 'prod'>('app.env') ?? 'dev';
+        const port = this.configService.get<number>('app.port') ?? 3006;
 
         return {
             status: 'ok',

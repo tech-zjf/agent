@@ -7,9 +7,10 @@ export class CopilotController {
     constructor(private readonly copilotService: CopilotService) {}
 
     @Post('draft-reply')
-    draftReply(@Body() dto: DraftReplyDto) {
+    async draftReply(@Body() dto: DraftReplyDto) {
+        const data = await this.copilotService.draftReply(dto);
         return {
-            data: this.copilotService.draftReply(dto),
+            data,
         };
     }
 }

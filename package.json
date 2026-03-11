@@ -12,7 +12,7 @@
     "start:service": "pnpm --filter agent-service start",
     "start:desktop": "pnpm --filter agent-desktop dev",
     "build:desktop": "pnpm --filter agent-desktop build",
-    "build:service": "pnpm --filter agent-service build:prod",
+    "build:service": "pnpm --filter agent-service build",
     "build:all": "pnpm build:desktop && pnpm build:service",
     "docker:desktop": "docker build -f apps/agent-desktop/Dockerfile -t agent-desktop .",
     "docker:service": "docker build -f apps/agent-service/Dockerfile -t agent-service ."

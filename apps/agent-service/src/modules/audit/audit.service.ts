@@ -7,7 +7,7 @@ import { AuditEvent } from '../shared/models';
 export class AuditService {
     constructor(private readonly dataStore: DataStoreService) {}
 
-    recordEvent(eventType: string, payload: Record<string, unknown>, conversationId?: string, customerId?: string): AuditEvent {
+    async recordEvent(eventType: string, payload: Record<string, unknown>, conversationId?: string, customerId?: string): Promise<AuditEvent> {
         const event: AuditEvent = {
             id: randomUUID(),
             eventType,
@@ -20,7 +20,7 @@ export class AuditService {
         return this.dataStore.addAuditEvent(event);
     }
 
-    listEvents(limit: number): AuditEvent[] {
+    async listEvents(limit: number): Promise<AuditEvent[]> {
         return this.dataStore.listAuditEvents(limit);
     }
 }

@@ -5,11 +5,11 @@ import { DataStoreService } from '../data-store/data-store.service';
 export class MemoryService {
     constructor(private readonly dataStore: DataStoreService) {}
 
-    getCustomerMemory(customerId: string) {
+    async getCustomerMemory(customerId: string) {
         return this.dataStore.getCustomerMemory(customerId);
     }
 
-    addCustomerFacts(customerId: string, facts: string[]) {
+    async addCustomerFacts(customerId: string, facts: string[]) {
         const filteredFacts = facts
             .map((fact) => fact.trim())
             .filter((fact) => fact.length > 0)
@@ -18,11 +18,11 @@ export class MemoryService {
         return this.dataStore.upsertCustomerFacts(customerId, filteredFacts);
     }
 
-    getConversationMemory(conversationId: string, customerId: string) {
+    async getConversationMemory(conversationId: string, customerId: string) {
         return this.dataStore.getConversationMemory(conversationId, customerId);
     }
 
-    updateConversationMemory(conversationId: string, customerId: string, question: string, answerSummary: string) {
-        return this.dataStore.updateConversationMemory(conversationId, customerId, question, answerSummary);
+    async updateConversationMemory(conversationId: string, customerId: string, question: string, answerSummary: string, channel?: string) {
+        return this.dataStore.updateConversationMemory(conversationId, customerId, question, answerSummary, channel);
     }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { DataStoreService } from '../data-store/data-store.service';
 import { AuditService } from '../audit/audit.service';
+import { DataStoreService } from '../data-store/data-store.service';
 import { SupportTicket, TicketPriority } from '../shared/models';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 
@@ -12,7 +12,7 @@ export class TicketsService {
         private readonly auditService: AuditService,
     ) {}
 
-    createTicket(dto: CreateTicketDto): SupportTicket {
+    async createTicket(dto: CreateTicketDto): Promise<SupportTicket> {
         const priority: TicketPriority = dto.priority ?? 'medium';
 
         const ticket: SupportTicket = {
@@ -26,8 +26,8 @@ export class TicketsService {
             createdAt: new Date().toISOString(),
         };
 
-        const created = this.dataStore.addTicket(ticket);
-        this.auditService.recordEvent(
+        const created = await this.dataStore.addTicket(ticket);
+        await this.auditService.recordEvent(
             'ticket.created',
             {
                 ticketId: created.id,
@@ -41,7 +41,7 @@ export class TicketsService {
         return created;
     }
 
-    listTickets(): SupportTicket[] {
+    async listTickets(): Promise<SupportTicket[]> {
         return this.dataStore.listTickets();
     }
 }

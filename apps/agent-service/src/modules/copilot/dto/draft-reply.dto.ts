@@ -1,6 +1,6 @@
 export class DraftReplyDto {
     conversationId!: string;
     customerId!: string;
-    customerQuestion!: string;
+    question!: string;
     channel?: 'wechat' | 'webchat' | 'email' | 'other';
 }

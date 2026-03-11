@@ -6,12 +6,12 @@ export class AuditController {
     constructor(private readonly auditService: AuditService) {}
 
     @Get()
-    listEvents(@Query('limit') limit = '50') {
+    async listEvents(@Query('limit') limit = '50') {
         const parsedLimit = Number.parseInt(limit, 10);
         const safeLimit = Number.isNaN(parsedLimit) ? 50 : parsedLimit;
 
         return {
-            data: this.auditService.listEvents(safeLimit),
+            data: await this.auditService.listEvents(safeLimit),
         };
     }
 }

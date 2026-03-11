@@ -7,16 +7,16 @@ export class TicketsController {
     constructor(private readonly ticketsService: TicketsService) {}
 
     @Get()
-    listTickets() {
+    async listTickets() {
         return {
-            data: this.ticketsService.listTickets(),
+            data: await this.ticketsService.listTickets(),
         };
     }
 
     @Post()
-    createTicket(@Body() dto: CreateTicketDto) {
+    async createTicket(@Body() dto: CreateTicketDto) {
         return {
-            data: this.ticketsService.createTicket(dto),
+            data: await this.ticketsService.createTicket(dto),
         };
     }
 }

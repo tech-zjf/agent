@@ -7,24 +7,24 @@ export class KnowledgeController {
     constructor(private readonly knowledgeService: KnowledgeService) {}
 
     @Get()
-    listArticles() {
+    async listArticles() {
         return {
-            data: this.knowledgeService.listArticles(),
+            data: await this.knowledgeService.listArticles(),
         };
     }
 
     @Get('search')
-    searchArticles(@Query('q') query = '') {
+    async searchArticles(@Query('q') query = '') {
         return {
-            data: this.knowledgeService.searchArticles(query),
+            data: await this.knowledgeService.searchArticles(query),
             query,
         };
     }
 
     @Post()
-    createArticle(@Body() dto: CreateKnowledgeArticleDto) {
+    async createArticle(@Body() dto: CreateKnowledgeArticleDto) {
         return {
-            data: this.knowledgeService.createArticle(dto),
+            data: await this.knowledgeService.createArticle(dto),
         };
     }
 }

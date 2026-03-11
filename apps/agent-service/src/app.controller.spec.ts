@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -15,10 +15,11 @@ describe('AppController', () => {
                     provide: ConfigService,
                     useValue: {
                         get: (key: string) => {
-                            if (key === 'env') {
+                            if (key === 'app.env') {
                                 return 'dev';
                             }
-                            if (key === 'port') {
+
+                            if (key === 'app.port') {
                                 return 3006;
                             }
 

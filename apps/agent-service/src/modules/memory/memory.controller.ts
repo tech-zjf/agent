@@ -7,16 +7,16 @@ export class MemoryController {
     constructor(private readonly memoryService: MemoryService) {}
 
     @Get(':customerId')
-    getCustomerMemory(@Param('customerId') customerId: string) {
+    async getCustomerMemory(@Param('customerId') customerId: string) {
         return {
-            data: this.memoryService.getCustomerMemory(customerId),
+            data: await this.memoryService.getCustomerMemory(customerId),
         };
     }
 
     @Post(':customerId/facts')
-    addCustomerFacts(@Param('customerId') customerId: string, @Body() dto: AddCustomerFactsDto) {
+    async addCustomerFacts(@Param('customerId') customerId: string, @Body() dto: AddCustomerFactsDto) {
         return {
-            data: this.memoryService.addCustomerFacts(customerId, dto.facts ?? []),
+            data: await this.memoryService.addCustomerFacts(customerId, dto.facts ?? []),
         };
     }
 }

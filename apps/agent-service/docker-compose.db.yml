@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: agent-service-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: zjf012511
+      POSTGRES_DB: agent_service
+    ports:
+      - '5432:5432'
+    volumes:
+      - agent_service_pg_data:/var/lib/postgresql/data
+
+volumes:
+  agent_service_pg_data:

@@ -1,11 +1,2 @@
-export * from './environment';
-
-export interface Environment {
-    production: boolean;
-    env: 'dev' | 'beta' | 'prod';
-    port: number;
-    database: {
-        host: string;
-        port: number;
-    };
-}
+export { default as configuration, type AppConfiguration, type RuntimeEnv } from './configuration';
+export { validateEnv } from './env.validation';

@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuditService } from '../audit/audit.service';
-import { Citation, ReplyAction } from '../shared/models';
 import { KnowledgeService } from '../knowledge/knowledge.service';
 import { MemoryService } from '../memory/memory.service';
+import { Citation, ReplyAction } from '../shared/models';
 import { DraftReplyDto } from './dto/draft-reply.dto';
 import { DraftReplyResponse } from './types/draft-reply.response';
 
 @Injectable()
 export class CopilotService {
     private readonly confidenceThreshold = 0.65;
+    private readonly allowedChannels = new Set(['wechat', 'webchat', 'email', 'other']);
 
     constructor(
         private readonly knowledgeService: KnowledgeService,
@@ -16,18 +17,21 @@ export class CopilotService {
         private readonly auditService: AuditService,
     ) {}
 
-    draftReply(input: DraftReplyDto): DraftReplyResponse {
-        const question = input.customerQuestion.trim();
-        const customerMemory = this.memoryService.getCustomerMemory(input.customerId);
-        this.memoryService.getConversationMemory(input.conversationId, input.customerId);
+    async draftReply(input: DraftReplyDto): Promise<DraftReplyResponse> {
+        const normalizedInput = this.normalizeDraftInput(input);
+        const customerMemory = await this.memoryService.getCustomerMemory(normalizedInput.customerId);
+        await this.memoryService.getConversationMemory(normalizedInput.conversationId, normalizedInput.customerId);
 
-        const articles = this.knowledgeService.searchArticles(question).slice(0, 3);
+        const topK = 3;
+        const articles = (await this.knowledgeService.searchArticles(normalizedInput.question)).slice(0, topK);
+
         const citations = this.buildCitations(
             articles.map((article) => article.content),
             articles.map((article) => article.id),
             articles.map((article) => article.title),
         );
-        const confidence = this.calculateConfidence(question, citations);
+
+        const confidence = this.calculateConfidence(normalizedInput.question, citations);
 
         let action: ReplyAction = 'reply';
         let clarifyQuestion: string | undefined;
@@ -43,7 +47,7 @@ export class CopilotService {
             action = citations.length === 0 ? 'escalate' : 'clarify';
         }
 
-        const draftReply = this.composeDraftReply(question, citations, customerMemory.facts, action);
+        const draftReply = this.composeDraftReply(normalizedInput.question, citations, customerMemory.facts, action);
 
         if (action === 'clarify') {
             clarifyQuestion = '为了给你准确答复，我需要确认一下：你遇到的是具体哪一个订单号，以及问题发生的时间点？';
@@ -51,16 +55,22 @@ export class CopilotService {
 
         if (action === 'escalate') {
             ticketSuggestion = {
-                title: `待人工介入: ${question.slice(0, 24)}`,
-                description: `系统未能从知识库匹配到可靠答案，建议二线支持介入。原问题：${question}`,
+                title: `待人工介入: ${normalizedInput.question.slice(0, 24)}`,
+                description: `系统未能从知识库匹配到可靠答案，建议二线支持介入。原问题：${normalizedInput.question}`,
                 priority: 'medium',
             };
         }
 
-        const answerSummary = `${action} | confidence=${confidence.toFixed(2)} | question=${question.slice(0, 80)}`;
-        const updatedConversation = this.memoryService.updateConversationMemory(input.conversationId, input.customerId, question, answerSummary);
+        const answerSummary = `${action} | confidence=${confidence.toFixed(2)} | question=${normalizedInput.question.slice(0, 80)}`;
+        const updatedConversation = await this.memoryService.updateConversationMemory(
+            normalizedInput.conversationId,
+            normalizedInput.customerId,
+            normalizedInput.question,
+            answerSummary,
+            normalizedInput.channel,
+        );
 
-        this.auditService.recordEvent(
+        await this.auditService.recordEvent(
             'copilot.draft_generated',
             {
                 action,
@@ -70,8 +80,8 @@ export class CopilotService {
                     score: citation.score,
                 })),
             },
-            input.conversationId,
-            input.customerId,
+            normalizedInput.conversationId,
+            normalizedInput.customerId,
         );
 
         return {
@@ -98,6 +108,36 @@ export class CopilotService {
         const diversity = questionTokens > 10 ? 0.06 : 0.02;
 
         return Number(Math.min(base + diversity, 0.92).toFixed(2));
+    }
+
+    private normalizeDraftInput(input: DraftReplyDto): {
+        conversationId: string;
+        customerId: string;
+        question: string;
+        channel: 'wechat' | 'webchat' | 'email' | 'other';
+    } {
+        const conversationId = (input.conversationId || '').trim();
+        const customerId = (input.customerId || '').trim();
+        const question = (input.question || '').trim();
+        const rawChannel = input.channel ?? 'other';
+        const channel = this.allowedChannels.has(rawChannel) ? rawChannel : 'other';
+
+        if (!conversationId) {
+            throw new BadRequestException('conversationId 不能为空');
+        }
+        if (!customerId) {
+            throw new BadRequestException('customerId 不能为空');
+        }
+        if (!question) {
+            throw new BadRequestException('question 不能为空');
+        }
+
+        return {
+            conversationId,
+            customerId,
+            question,
+            channel,
+        };
     }
 
     private composeDraftReply(question: string, citations: Citation[], customerFacts: string[], action: ReplyAction): string {
