@@ -8,15 +8,11 @@ export class MemoryController {
 
     @Get(':customerId')
     async getCustomerMemory(@Param('customerId') customerId: string) {
-        return {
-            data: await this.memoryService.getCustomerMemory(customerId),
-        };
+        return this.memoryService.getCustomerMemory(customerId);
     }
 
     @Post(':customerId/facts')
     async addCustomerFacts(@Param('customerId') customerId: string, @Body() dto: AddCustomerFactsDto) {
-        return {
-            data: await this.memoryService.addCustomerFacts(customerId, dto.facts ?? []),
-        };
+        return this.memoryService.addCustomerFacts(customerId, dto.facts);
     }
 }

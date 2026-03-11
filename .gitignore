@@ -23,6 +23,8 @@ out/
 .env.test.local
 .env.production.local
 !**/.env.example
+!**/.env.development.example
+!**/.env.production.example
 
 # Debug
 npm-debug.log*
@@ -62,6 +64,7 @@ logs/
 # Misc
 .eslintcache
 .stylelintcache
+*.tsbuildinfo
 
 42service/
 nextjs-template/

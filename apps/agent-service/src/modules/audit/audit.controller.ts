@@ -9,9 +9,6 @@ export class AuditController {
     async listEvents(@Query('limit') limit = '50') {
         const parsedLimit = Number.parseInt(limit, 10);
         const safeLimit = Number.isNaN(parsedLimit) ? 50 : parsedLimit;
-
-        return {
-            data: await this.auditService.listEvents(safeLimit),
-        };
+        return this.auditService.listEvents(safeLimit);
     }
 }

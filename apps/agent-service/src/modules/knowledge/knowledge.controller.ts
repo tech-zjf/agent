@@ -8,23 +8,16 @@ export class KnowledgeController {
 
     @Get()
     async listArticles() {
-        return {
-            data: await this.knowledgeService.listArticles(),
-        };
+        return this.knowledgeService.listArticles();
     }
 
     @Get('search')
     async searchArticles(@Query('q') query = '') {
-        return {
-            data: await this.knowledgeService.searchArticles(query),
-            query,
-        };
+        return this.knowledgeService.searchArticles(query);
     }
 
     @Post()
     async createArticle(@Body() dto: CreateKnowledgeArticleDto) {
-        return {
-            data: await this.knowledgeService.createArticle(dto),
-        };
+        return this.knowledgeService.createArticle(dto);
     }
 }

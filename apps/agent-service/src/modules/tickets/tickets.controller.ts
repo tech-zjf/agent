@@ -8,15 +8,11 @@ export class TicketsController {
 
     @Get()
     async listTickets() {
-        return {
-            data: await this.ticketsService.listTickets(),
-        };
+        return this.ticketsService.listTickets();
     }
 
     @Post()
     async createTicket(@Body() dto: CreateTicketDto) {
-        return {
-            data: await this.ticketsService.createTicket(dto),
-        };
+        return this.ticketsService.createTicket(dto);
     }
 }

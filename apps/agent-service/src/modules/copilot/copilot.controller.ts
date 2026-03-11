@@ -8,9 +8,6 @@ export class CopilotController {
 
     @Post('draft-reply')
     async draftReply(@Body() dto: DraftReplyDto) {
-        const data = await this.copilotService.draftReply(dto);
-        return {
-            data,
-        };
+        return this.copilotService.draftReply(dto);
     }
 }

@@ -4,6 +4,8 @@
 1. PostgreSQL 持久化
 2. TypeORM Migration 历史管理
 3. 知识库检索 + 草稿回复 + 记忆 + 工单 + 审计闭环
+4. 统一响应拦截 + 异常过滤 + requestId 中间件
+5. DTO 细粒度参数校验（class-validator）
 
 ## 安装依赖
 
@@ -80,6 +82,7 @@ pnpm run db:revert
 
 ## 目录说明
 
+- `src/core`：中间件、拦截器、过滤器、错误码等通用能力
 - `src/database/entities`：数据库实体
 - `src/database/migrations`：迁移历史文件
 - `src/database/data-source.ts`：TypeORM CLI 配置
