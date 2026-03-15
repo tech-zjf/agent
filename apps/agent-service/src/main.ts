@@ -8,6 +8,11 @@ import { TrimStringsPipe } from './core/pipes/trim-strings.pipe';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.enableCors({
+        origin: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
+    });
     const reflector = app.get(Reflector);
     app.useGlobalInterceptors(new ApiResponseInterceptor(reflector));
     app.useGlobalFilters(new HttpExceptionFilter());

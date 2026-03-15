@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { configuration, validateEnv } from './config';
 import { RequestContextMiddleware } from './core/middleware/request-context.middleware';
 import { DatabaseModule } from './database/database.module';
+import { AiModule } from './modules/ai/ai.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { CopilotModule } from './modules/copilot/copilot.module';
 import { DataStoreModule } from './modules/data-store/data-store.module';
@@ -21,6 +22,7 @@ import { TicketsModule } from './modules/tickets/tickets.module';
             validate: validateEnv,
             load: [configuration],
         }),
+        AiModule,
         DatabaseModule,
         DataStoreModule,
         KnowledgeModule,

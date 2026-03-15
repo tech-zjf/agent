@@ -6,6 +6,8 @@
 3. 知识库检索 + 草稿回复 + 记忆 + 工单 + 审计闭环
 4. 统一响应拦截 + 异常过滤 + requestId 中间件
 5. DTO 细粒度参数校验（class-validator）
+6. LangChain + MiniMax 官方 Chat 适配器接入
+7. 可扩展模型适配层（为后续接入千问 / 豆包 / 图片 / 视频能力预留接口）
 
 ## 安装依赖
 
@@ -19,7 +21,29 @@ pnpm install
 cp .env.example .env.dev
 ```
 
-然后按本地实际情况修改 `.env.dev`（默认端口 `3006`，默认数据库端口 `5432`）。
+然后按本地实际情况修改 `.env.dev`。
+
+### 数据库相关
+
+默认端口 `3006`，数据库端口 `5432`。
+
+### AI 相关
+
+默认 `AI_CHAT_ENABLED=false`，此时系统使用确定性规则生成客服草稿，不依赖外部模型。
+
+如果要启用 MiniMax：
+
+```env
+AI_CHAT_ENABLED=true
+AI_CHAT_PROVIDER=minimax
+AI_CHAT_MODEL=abab5.5-chat
+MINIMAX_API_KEY=你的密钥
+MINIMAX_GROUP_ID=你的 GroupId
+```
+
+说明：
+1. 当 `AI_CHAT_ENABLED=true` 时，启动阶段会强校验 `MINIMAX_API_KEY` 和 `MINIMAX_GROUP_ID`。
+2. 业务层不会直接依赖 MiniMax SDK，而是通过统一 AI 适配层调用，后续可以继续接入其他模型提供商。
 
 ## 本地数据库（推荐）
 
@@ -34,8 +58,8 @@ pnpm run db:run
 默认本地连接参数（已写入 `.env.dev`）：
 1. host: `127.0.0.1`
 2. port: `5432`
-3. user: `root`（可按你本地环境修改）
-4. password: `zjf012511`（可按你本地环境修改）
+3. user: `root`
+4. password: `zjf012511`
 5. database: `agent_service`
 
 如果数据库连接失败（`ECONNREFUSED 127.0.0.1:5432`），优先检查：
@@ -60,6 +84,7 @@ pnpm run start:prod
 
 ```bash
 pnpm run lint
+pnpm exec tsc --noEmit
 pnpm run test
 pnpm run test:e2e
 ```
@@ -86,8 +111,9 @@ pnpm run db:revert
 - `src/database/entities`：数据库实体
 - `src/database/migrations`：迁移历史文件
 - `src/database/data-source.ts`：TypeORM CLI 配置
+- `src/modules/ai`：AI 能力适配层（provider registry / adapter / capability）
 - `src/modules/knowledge`：知识库模块
-- `src/modules/copilot`：Copilot 编排与决策
+- `src/modules/copilot`：Copilot 编排、AI 决策与守卫逻辑
 - `src/modules/memory`：短期/长期记忆
 - `src/modules/tickets`：工单模块
 - `src/modules/audit`：审计模块
@@ -98,6 +124,8 @@ pnpm run db:revert
 - `../../docs/00-阅读导航.md`
 - `../../docs/01-产品文档/01-产品架构设计.md`
 - `../../docs/01-产品文档/02-MVP需求文档.md`
+- `../../docs/02-开发流程/00-本地启动与联调手册.md`
 - `../../docs/02-开发流程/01-V1实现版本文档.md`
 - `../../docs/02-开发流程/04-改动明细与原因.md`
+- `../../docs/02-开发流程/07-LangChain模型适配层与MiniMax接入.md`
 - `../../docs/03-进阶指南/01-pgvector安装与迁移步骤.md`

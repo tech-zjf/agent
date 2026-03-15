@@ -1,5 +1,13 @@
 import { Citation, ReplyAction } from '../../shared/models';
 
+export interface DraftReplyGenerationMeta {
+    aiEnabled: boolean;
+    source: 'ai' | 'rule';
+    provider?: string;
+    model?: string;
+    fallbackReason?: string;
+}
+
 export interface DraftReplyResponse {
     action: ReplyAction;
     confidence: number;
@@ -15,4 +23,5 @@ export interface DraftReplyResponse {
         conversationSummary: string;
         customerFacts: string[];
     };
+    generation: DraftReplyGenerationMeta;
 }

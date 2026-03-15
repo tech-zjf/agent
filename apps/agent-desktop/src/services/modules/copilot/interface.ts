@@ -29,4 +29,11 @@ export interface DraftReplyResult {
         conversationSummary: string;
         customerFacts: string[];
     };
+    generation: {
+        aiEnabled: boolean;
+        source: 'ai' | 'rule';
+        provider?: string;
+        model?: string;
+        fallbackReason?: string;
+    };
 }
